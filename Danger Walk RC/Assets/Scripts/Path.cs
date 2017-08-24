@@ -5,16 +5,31 @@ using System.Collections.Generic;
 public class Path : MonoBehaviour {
 
 	public Color lineColor;
-    
-	private List<Transform> nodes;
-    public GameObject car1;
+    private Transform playerTransform;
+    private List<Transform> nodes;
+    public GameObject[] car1;
+    private GameObject currentCar;
+    private List<GameObject> carTodelete = new List<GameObject>();
+    private int index = 0;
     public bool isUp = false;
     Vector3 currentNode = Vector3.zero;
     Vector3 previousNode = Vector3.zero;
+    void setNewCar()
+    {
+        index = Random.Range(0, car1.Length);
+        //currentCar = Instantiate(car1[index]) as GameObject;
+        if (isUp)
+            currentCar.transform.rotation = new Quaternion(0, 0, 180, 0);
+        else
+            currentCar.transform.rotation = new Quaternion(0, 0, 0, 0);
+
+    //    carTodelete.Add(currentCar);
+    }
     void Start()
     {
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         //car1 = GameObject.Find("car1");
-       // car1 = GetComponent<GameObject>();
+        // car1 = GetComponent<GameObject>();
         Transform[] pathTransform = GetComponentsInChildren<Transform>();
         //List<Transform> pathTransform = GetComponentsInChildren<Transform>();
         nodes = new List<Transform>();
@@ -39,29 +54,51 @@ public class Path : MonoBehaviour {
                 previousNode = nodes[nodes.Count - 1].position;
             }
         }
-        car1.transform.position = new Vector3(currentNode.x, currentNode.y, currentNode.z);
-        }
+        index = Random.Range(0, car1.Length);
+        currentCar = Instantiate(car1[index]) as GameObject;
+        currentCar.transform.position = new Vector3(previousNode.x, previousNode.y, previousNode.z);
+       
+
+    }
     void Direction()
     {
-        if (isUp)
+        if (currentCar != null)
         {
-        
-            if (nodes[0].transform.position.x < car1.transform.position.x)
-                car1.transform.Translate(new Vector3(0.05f, 0, 0));
+            if (isUp)
+            {
+                if (nodes[0].transform.position.x < currentCar.transform.position.x)
+                    currentCar.transform.Translate(new Vector3(0.05f, 0, 0));
+                else
+                {
+                    setNewCar();
+                    currentCar.transform.position = new Vector3(currentNode.x, currentNode.y, currentNode.z);
+
+                }
+            }
             else
-                car1.transform.position = new Vector3(currentNode.x, currentNode.y, currentNode.z);
-        }
-        else
-        {
-            if (nodes[0].transform.position.x > car1.transform.position.x)
-                car1.transform.Translate(new Vector3(0.05f, 0, 0));
-            else
-                car1.transform.position = new Vector3(currentNode.x, currentNode.y, currentNode.z);
+            {
+                if (nodes[0].transform.position.x > currentCar.transform.position.x)
+                {
+                    currentCar.transform.Translate(new Vector3(0.05f, 0, 0));
+                }
+                else
+                {
+                    setNewCar();
+                    currentCar.transform.position = new Vector3(currentNode.x, currentNode.y, currentNode.z);
+                    // setNewCar();
+                }
+            }
+
         }
     }
     void Update()
     {
         Direction();
+         if(GameObject.FindGameObjectsWithTag("Car").Length > 10)
+        {
+            Destroy(GameObject.FindGameObjectsWithTag("Car")[GameObject.FindGameObjectsWithTag("Car").Length - 7]);
+        }
+       // Debug.Log(GameObject.FindGameObjectsWithTag("Car").Length);
     }
 	void OnDrawGizmosSelected()
 	{

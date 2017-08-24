@@ -9,6 +9,7 @@ public class TilesManager : MonoBehaviour {
     private float tileLength = 2.0f;
     private int amnTilesOnScreen = 3;
     private float safeZone = 2.5f;
+    private int number = 0;
     private List<GameObject> activeTiles = new List<GameObject>();
 	// Use this for initialization
 	void Start () {
@@ -22,13 +23,14 @@ public class TilesManager : MonoBehaviour {
         }
 	}
 	private void SpawnTile(int prefabIndex = -1)
-    {
-        GameObject go;
+    {      
+        GameObject go;        
         go = Instantiate(tilePrefabs[0]) as GameObject;
         go.transform.SetParent(transform);
-        go.transform.position = new Vector2(-1.25f, spawnY);
+        go.transform.position = new Vector3(-1.25f, spawnY,tilePrefabs[0].transform.position.z);
+        
         spawnY += tileLength;
-        activeTiles.Add(go);
+        activeTiles.Add(go);     
     }
     private void DeleteTile()
     {
