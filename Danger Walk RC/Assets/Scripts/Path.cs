@@ -67,7 +67,7 @@ public class Path : MonoBehaviour {
             if (isUp)
             {
                 if (nodes[0].transform.position.x < currentCar.transform.position.x)
-                    currentCar.transform.Translate(new Vector3(0.05f, 0, 0));
+                    currentCar.transform.Translate(new Vector3(0.15f, 0, 0));
                 else
                 {
                     setNewCar();
@@ -79,7 +79,7 @@ public class Path : MonoBehaviour {
             {
                 if (nodes[0].transform.position.x > currentCar.transform.position.x)
                 {
-                    currentCar.transform.Translate(new Vector3(0.05f, 0, 0));
+                    currentCar.transform.Translate(new Vector3(0.15f, 0, 0));
                 }
                 else
                 {
